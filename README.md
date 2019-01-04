@@ -33,5 +33,10 @@ Keys and values are stored directly in section's tables.
 ## Important
 Section's names, keys and values can be saved only as string
 
+# Other files
+- `lua/` - Lua headersand binaries for building library
+- `a.ini` - example ini file
+- `main.lua` - test script
+
 # Other information and bugs
 Will be fixed or added on next week. Or maybe later...
