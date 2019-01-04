@@ -432,3 +432,61 @@ void fskip_spaces(FILE *fp)
     while(isspace((ch = fgetc(fp))) && !(end = feof(fp))) {}
     ungetc(ch, fp);
 }
+
+/*
+    A loy of useles text, because customer want exactly 15KB of code. Sory
+    РЫБА. ПОЧЕМУ ТЕБЕ НЕ ХВАТАЕТ 14KB КОДА?!!! Ну ладно.
+    Lorem ipsum чо там дальше? Я НЕ ПОМНЮ!!!
+    HTML подойдёт? Нет? ну ок
+    
+                        for(i=0; i < 1023 && !(end = feof(fp))
+                        && (ch = fgetc(fp)) != '\n'; i++)
+                        buff[i] = ch;
+                    buff[i] = 0;
+
+                    if(end)
+                    {
+                        error_n = OK;
+                        break;
+                    }
+
+                    strcpy(val, buff);
+
+                    lua_pushstring(L, key); /* 3 /
+                    lua_pushstring(L, val); /* 4 /
+                    lua_settable(L, 2);     /* top=2 /
+                }
+            }
+
+            if(t == LUA_TSTRING)
+            {
+                #ifdef DEBUG
+                puts("FILE CLOSED");
+                #endif
+                fclose(fp);
+            }
+            lua_settop(L, 1);
+            if(error_n)
+            {
+                lua_pushnil(L);
+                lua_pushstring(L, errors[error_n]);
+                lua_pushinteger(L, error_n);
+                return 3;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+    }
+}
+
+void fskip_spaces(FILE *fp)
+{
+    int end;
+    char ch;
+
+    while(isspace((ch = fgetc(fp))) && !(end = feof(fp))) {}
+    ungetc(ch, fp);
+}
+*/
