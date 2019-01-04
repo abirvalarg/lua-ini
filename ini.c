@@ -151,9 +151,6 @@ LUA_FUNC(static_open)   /* ini_table ini.open(file|path)    */
                 }
 
                 ch = fgetc(fp);
-                #ifdef DEBUG
-                printf("'%c'\r\n", ch);
-                #endif
                 if(ch != '[' && !in_sect)
                 {
                     error_n = NO_SECTION;
@@ -286,13 +283,8 @@ LUA_FUNC(static_open)   /* ini_table ini.open(file|path)    */
 void fskip_spaces(FILE *fp)
 {
     int end;
-    #ifdef DEBUG
     char ch;
-    while(isspace((ch = fgetc(fp))) && !(end = feof(fp)))
-        printf("'%c'\r\n", ch);
-    printf("'%c'\r\n", ch);
-    #else
-    while(isspace(fgetc(fp)) && !(end = feof(fp))) {}
-    #endif
-    if(!end) fseek(fp, -1, SEEK_CUR);
+
+    while(isspace((ch = fgetc(fp))) && !(end = feof(fp))) {}
+    ungetc(ch, fp);
 }

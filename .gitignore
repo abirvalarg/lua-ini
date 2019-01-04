@@ -146,3 +146,4 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/c,git,lua,linux,windows,visualstudiocode
+*.ini
