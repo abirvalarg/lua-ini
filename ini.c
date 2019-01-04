@@ -216,6 +216,7 @@ LUA_FUNC(static_open)   /* ini_table ini.open(file|path)    */
                 }
                 else    /* Обработка пар K-V */
                 {
+                    ungetc(ch, fp);
                     lua_settop(L, 2);   /* top=2 */
                     fskip_spaces(fp);
                     for(i=0; i < 1023 && !(end = feof(fp))
@@ -246,7 +247,7 @@ LUA_FUNC(static_open)   /* ini_table ini.open(file|path)    */
 
                     if(end)
                     {
-                        error_n = UNEXP_EOF;
+                        error_n = OK;
                         break;
                     }
 
