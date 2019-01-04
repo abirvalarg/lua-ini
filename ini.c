@@ -271,7 +271,8 @@ LUA_FUNC(static_open)   /* ini_table ini.open(file|path)    */
             {
                 lua_pushnil(L);
                 lua_pushstring(L, errors[error_n]);
-                return 2;
+                lua_pushinteger(L, error_n);
+                return 3;
             }
             else
             {
