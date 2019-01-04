@@ -40,3 +40,6 @@ Section's names, keys and values can be saved only as string
 
 # Other information and bugs
 Will be fixed or added on next week. Or maybe later...
+
+## Important
+Sory for lots of small and almost useles commits and my English
