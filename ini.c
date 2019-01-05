@@ -5,6 +5,7 @@
 #include "lua/lua.h"
 #include "lua/lualib.h"
 #include "lua/lauxlib.h"
+#include "ini-cfg.h"
 
 #define LUA_FUNC(NAME) static int (NAME)(lua_State *L)
 #define REG_NAME "ini"
@@ -158,7 +159,7 @@ Pass it as 2nd argument for save or set field '__path'");
                     t2 = lua_type(L, -1);
                     if(t2 == LUA_TTABLE)
                     {
-                        fprintf(fp,"[%s]\n", lua_tostring(L, -2));
+                        fprintf(fp,"%c%s%c\n", INI_SECTION_NAME_START, lua_tostring(L, -2), INI_SECTION_NAME_STOP);
                         lua_pushnil(L); /* 4 */
                         while(lua_next(L, -2))
                         {
@@ -169,7 +170,7 @@ Pass it as 2nd argument for save or set field '__path'");
                                 4 key
                                 5 value
                              */
-                            fprintf(fp, "%s=%s\n", lua_tostring(L, -2), lua_tostring(L, -1));
+                            fprintf(fp, "%s%c%s\n", lua_tostring(L, -2), INI_SEPORATE, lua_tostring(L, -1));
                             lua_pop(L, 1);  /* top=4(key) */
                         }
                     }
@@ -266,13 +267,6 @@ LUA_FUNC(static_open)   /* ini_table ini.open(file|path)    */
         }
 
         {
-            enum ERRORS { OK=0, NO_SECTION, UNEXP_EOF, STR_TOO_BIG };
-            const char *errors[] = {
-                NULL,
-                "No section defined",
-                "Unexpected EOF",
-                "String too big",
-            };
             char    ch;
             char    buff[1024];
             char    sect[128];
@@ -294,15 +288,15 @@ LUA_FUNC(static_open)   /* ini_table ini.open(file|path)    */
                 }
 
                 ch = fgetc(fp);
-                if(ch != '[' && !in_sect)
+                if(ch != INI_SECTION_NAME_START && !in_sect)
                 {
                     error_n = NO_SECTION;
                     break;
                 }
-                else if(ch == '[')  /* Установка новой секции */
+                else if(ch == INI_SECTION_NAME_STOP)  /* Установка новой секции */
                 {
                     lua_settop(L, 1);   /* top=1 */
-                    for(i=0; i < 1023 && !(end = feof(fp)) && (ch = fgetc(fp)) != ']'; i++)
+                    for(i=0; i < 1023 && !(end = feof(fp)) && (ch = fgetc(fp)) != INI_SECTION_NAME_STOP; i++)
                         buff[i] = ch;
                     buff[i] = 0;
                     if(end)
@@ -363,7 +357,7 @@ LUA_FUNC(static_open)   /* ini_table ini.open(file|path)    */
                     lua_settop(L, 2);   /* top=2 */
                     fskip_spaces(fp);
                     for(i=0; i < 1023 && !(end = feof(fp))
-                        && (ch = fgetc(fp)) != ' ' && ch != '='
+                        && (ch = fgetc(fp)) != ' ' && ch != INI_SEPORATE
                         && ch != '\n'; i++)
                         buff[i] = ch;
                     buff[i] = 0;
@@ -404,16 +398,13 @@ LUA_FUNC(static_open)   /* ini_table ini.open(file|path)    */
 
             if(t == LUA_TSTRING)
             {
-                #ifdef DEBUG
-                puts("FILE CLOSED");
-                #endif
                 fclose(fp);
             }
             lua_settop(L, 1);
             if(error_n)
             {
                 lua_pushnil(L);
-                lua_pushstring(L, errors[error_n]);
+                lua_pushstring(L, ini_errors_text[error_n]);
                 lua_pushinteger(L, error_n);
                 return 3;
             }
@@ -435,7 +426,7 @@ void fskip_spaces(FILE *fp)
 }
 
 /*
-    A loy of useles text, because customer want exactly 15KB of code. Sory
+    A lot of useles text, because customer want exactly 15KB of code. Sory
     РЫБА. ПОЧЕМУ ТЕБЕ НЕ ХВАТАЕТ 14KB КОДА?!!! Ну ладно.
     Lorem ipsum чо там дальше? Я НЕ ПОМНЮ!!!
     HTML подойдёт? Нет? ну ок
@@ -470,7 +461,7 @@ void fskip_spaces(FILE *fp)
             if(error_n)
             {
                 lua_pushnil(L);
-                lua_pushstring(L, errors[error_n]);
+                lua_pushstring(L, INI_ERRORS[error_n]);
                 lua_pushinteger(L, error_n);
                 return 3;
             }
