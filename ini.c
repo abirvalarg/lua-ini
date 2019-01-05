@@ -117,6 +117,7 @@ LUA_FUNC(all_save)
                     if(t1 == LUA_TSTRING)
                     {
                         name = (char*)lua_tostring(L, 2);
+                        lua_pop(L, 1);
                     }
                     else
                     {
