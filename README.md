@@ -41,7 +41,7 @@ Section's names, keys and values can be saved only as string
 # Bugs
 - 'Mistery' empty strings in output files
 - Fields saved in random order
-- Section `__path`(Not alowed) doesn't raise any errors
+- Section `__path`(Not alowed) raises Lua-error. Be careful
 - No comment symbols
 - Hard to configurate library
 
