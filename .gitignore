@@ -111,10 +111,6 @@ luac.out
 
 ### VisualStudioCode ###
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
 
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
@@ -147,3 +143,7 @@ $RECYCLE.BIN/
 
 # End of https://www.gitignore.io/api/c,git,lua,linux,windows,visualstudiocode
 *.ini
+
+# debug sources
+dbg.*
+
