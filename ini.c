@@ -293,7 +293,7 @@ LUA_FUNC(static_open)   /* ini_table ini.open(file|path)    */
                     error_n = NO_SECTION;
                     break;
                 }
-                else if(ch == INI_SECTION_NAME_STOP)  /* Установка новой секции */
+                else if(ch == INI_SECTION_NAME_START)   /* Установка новой секции */
                 {
                     lua_settop(L, 1);   /* top=1 */
                     for(i=0; i < 1023 && !(end = feof(fp)) && (ch = fgetc(fp)) != INI_SECTION_NAME_STOP; i++)
