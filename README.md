@@ -38,8 +38,12 @@ Section's names, keys and values can be saved only as string
 - `a.ini` - example ini file
 - `main.lua` - test script
 
-# Other information and bugs
-Will be fixed or added on next week. Or maybe later...
+# Bugs
+- 'Mistery' empty strings in output files
+- Fields saved in random order
+- Section `__path`(Not alowed) doesn't raise any errors
+- No comment symbols
+- Hard to configurate library
 
-## Important
+<hr>
 Sory for lots of small and almost useles commits and my English
