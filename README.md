@@ -60,6 +60,7 @@ Section's names, keys and values can be saved only as string
 - Fields saved in random order
 - Section `__path`(Not alowed) raises Lua-error. Be careful
 - No comment symbols(it is in config, but does nothing yet)
+- <b>Memmory allocated but not cleaned</b>
 
 <hr>
 Sory for lots of small and almost useles commits and my English
