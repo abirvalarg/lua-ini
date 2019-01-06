@@ -68,6 +68,7 @@ LUA_FUNC(static_new)
 LUA_FUNC(all_save)
 {
     char *name;
+    int need_free = 0;
 
     if(lua_gettop(L) < 1)
     {
@@ -99,6 +100,7 @@ LUA_FUNC(all_save)
                         lua_settable(L, 1);             /* top=2 */
                         lua_len(L, 2);                  /* 3 */
                         name = malloc(lua_tointeger(L, -1) + 1);
+                        need_free = 1;
                         strcpy(name, lua_tostring(L, 2));
                         lua_settop(L, 1);               /* top=1 */
                     }
@@ -139,6 +141,8 @@ Pass it as 2nd argument for save or set field '__path'");
                 FILE *fp;
 
                 fp = fopen(name, "w");
+                if(need_free)
+                    free(name);
                 if(fp == NULL)
                 {
                     lua_pushboolean(L, 0);
@@ -281,6 +285,7 @@ LUA_FUNC(static_open)   /* ini_table ini.open(file|path)    */
         {
             lua_pushstring(L, "__path");/* 2 */
             lua_pushstring(L, name);    /* 3 */
+            free(name);
             lua_settable(L, 1);         /* top=1 */
         }
 
@@ -485,61 +490,3 @@ void fskip_spaces(FILE *fp)
     while(isspace((ch = fgetc(fp))) && !(end = feof(fp))) {}
     ungetc(ch, fp);
 }
-
-/*
-    A lot of useles text, because customer want exactly 15KB of code. Sory
-    РЫБА. ПОЧЕМУ ТЕБЕ НЕ ХВАТАЕТ 14KB КОДА?!!! Ну ладно.
-    Lorem ipsum чо там дальше? Я НЕ ПОМНЮ!!!
-    HTML подойдёт? Нет? ну ок
-    
-                        for(i=0; i < 1023 && !(end = feof(fp))
-                        && (ch = fgetc(fp)) != '\n'; i++)
-                        buff[i] = ch;
-                    buff[i] = 0;
-
-                    if(end)
-                    {
-                        error_n = OK;
-                        break;
-                    }
-
-                    strcpy(val, buff);
-
-                    lua_pushstring(L, key); /* 3 /
-                    lua_pushstring(L, val); /* 4 /
-                    lua_settable(L, 2);     /* top=2 /
-                }
-            }
-
-            if(t == LUA_TSTRING)
-            {
-                #ifdef DEBUG
-                puts("FILE CLOSED");
-                #endif
-                fclose(fp);
-            }
-            lua_settop(L, 1);
-            if(error_n)
-            {
-                lua_pushnil(L);
-                lua_pushstring(L, INI_ERRORS[error_n]);
-                lua_pushinteger(L, error_n);
-                return 3;
-            }
-            else
-            {
-                return 1;
-            }
-        }
-    }
-}
-
-void fskip_spaces(FILE *fp)
-{
-    int end;
-    char ch;
-
-    while(isspace((ch = fgetc(fp))) && !(end = feof(fp))) {}
-    ungetc(ch, fp);
-}
-*/

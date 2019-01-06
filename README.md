@@ -75,7 +75,6 @@ a=22        # Parser will set new value for `a` without raising any errors
 - 'Mistery' empty strings in output files(at least, everything is working)
 - Fields saved in random order
 - Section `__path`(Not alowed) raises Lua-error. Be careful
-- <b>Memmory allocated but not cleaned</b>
 
 <hr>
 Sory for lots of small and almost useles commits and my English
