@@ -44,6 +44,7 @@ Section's names, keys and values can be saved only as string
 - Section `__path`(Not alowed) raises Lua-error. Be careful
 - No comment symbols
 - Hard to configurate library
+- <b>Memmory allocated but not cleaned</b>
 
 <hr>
 Sory for lots of small and almost useles commits and my English
