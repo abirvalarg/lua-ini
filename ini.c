@@ -170,7 +170,25 @@ Pass it as 2nd argument for save or set field '__path'");
                                 4 key
                                 5 value
                              */
-                            fprintf(fp, "%s%c%s\n", lua_tostring(L, -2), INI_SEPORATE, lua_tostring(L, -1));
+                            const char *buff;
+                            char ch;
+
+                            buff = lua_tostring(L, -2);
+                            for(int i = 0; (ch = buff[i]); i++)
+                            {
+                                if(ch == INI_COMMENT || ch == INI_SCREEN || ch == INI_SEPORATE)
+                                    fputc(INI_SCREEN, fp);
+                                fputc(ch, fp);
+                            }
+                            fputc(INI_SEPORATE, fp);
+                            buff = lua_tostring(L, -1);
+                            for(int i = 0; (ch = buff[i]); i++)
+                            {
+                                if(ch == INI_COMMENT || ch == INI_SCREEN || ch == INI_SEPORATE)
+                                    fputc(INI_SCREEN, fp);
+                                fputc(ch, fp);
+                            }
+                            fputc('\n', fp);
                             lua_pop(L, 1);  /* top=4(key) */
                         }
                     }
@@ -277,6 +295,8 @@ LUA_FUNC(static_open)   /* ini_table ini.open(file|path)    */
             int     end = 0;
             int     i;
             int     t0;
+            int     was_backslash = 0;
+            int     was_comment = 0;
 
             while(!feof(fp))
             {
@@ -290,8 +310,12 @@ LUA_FUNC(static_open)   /* ini_table ini.open(file|path)    */
                 ch = fgetc(fp);
                 if(ch != INI_SECTION_NAME_START && !in_sect)
                 {
-                    error_n = NO_SECTION;
+                    error_n = INI_NO_SECTION;
                     break;
+                }
+                else if(ch == INI_COMMENT)
+                {
+                    while(fgetc(fp) != '\n') {}
                 }
                 else if(ch == INI_SECTION_NAME_START)   /* Установка новой секции */
                 {
@@ -301,13 +325,13 @@ LUA_FUNC(static_open)   /* ini_table ini.open(file|path)    */
                     buff[i] = 0;
                     if(end)
                     {
-                        error_n = UNEXP_EOF;
+                        error_n = INI_UNEXP_EOF;
                         break;
                     }
 
                     if(i > 127)
                     {
-                        error_n = STR_TOO_BIG;
+                        error_n = INI_STR_TOO_BIG;
                         break;
                     }
 
@@ -356,30 +380,67 @@ LUA_FUNC(static_open)   /* ini_table ini.open(file|path)    */
                     ungetc(ch, fp);
                     lua_settop(L, 2);   /* top=2 */
                     fskip_spaces(fp);
-                    for(i=0; i < 1023 && !(end = feof(fp))
+                    was_backslash = 0;
+                    for(i=0; i < 1023 && (!(end = feof(fp))
                         && (ch = fgetc(fp)) != ' ' && ch != INI_SEPORATE
-                        && ch != '\n'; i++)
-                        buff[i] = ch;
+                        && ch != '\n') || was_backslash; i++)
+                    {
+                        if(ch == INI_SCREEN && !was_backslash)
+                        {
+                            was_backslash = 1;
+                            i--;
+                        }
+                        else if(ch == INI_COMMENT && !was_backslash)
+                        {
+                            lua_pushnil(L);
+                            lua_pushstring(L, ini_errors_text[INI_COMM_AFTER_KEY]);
+                            lua_pushinteger(L, INI_COMM_AFTER_KEY);
+                            return 3;
+                            break;
+                        }
+                        else
+                        {
+                            buff[i] = ch;
+                            was_backslash = 0;
+                        }
+                    }
                     buff[i] = 0;
 
                     if(end)
                     {
-                        error_n = UNEXP_EOF;
+                        error_n = INI_UNEXP_EOF;
                         break;
                     }
 
                     if(i > 127)
                     {
-                        error_n = STR_TOO_BIG;
+                        error_n = INI_STR_TOO_BIG;
                         break;
                     }
 
                     strcpy(key, buff);
 
                     fskip_spaces(fp);
-                    for(i=0; i < 1023 && !(end = feof(fp))
-                        && (ch = fgetc(fp)) != '\n'; i++)
-                        buff[i] = ch;
+                    was_backslash = 0;
+                    for(i=0; i < 1023 && (!(end = feof(fp))
+                        && (ch = fgetc(fp)) != '\n') || was_backslash; i++)
+                    {
+                        if(ch == INI_SCREEN && !was_backslash)
+                        {
+                            was_backslash = 1;
+                            i--;
+                        }
+                        else if(ch == INI_COMMENT && !was_backslash)
+                        {
+                            while(fgetc(fp) != '\n') {}
+                            break;
+                        }
+                        else
+                        {
+                            buff[i] = ch;
+                            was_backslash = 0;
+                        }
+                    }
                     buff[i] = 0;
 
                     if(end)
