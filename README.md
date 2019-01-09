@@ -60,9 +60,9 @@ Some available structures may be not standard
 a=42        # Basic key-value pair were `a` is key and `42` is value
 
 [a#1]       # Special symbols aren't working in section's names
-a\#2=b\#1   # Here key is `a#1` and value is `b#1`
+a\#2=b\#1   # Here key is `a#2` and value is `b#1`
 
-[a]         # Overriding values in section `a`
+[a]         # Appending section `a`
 a=22        # Parser will set new value for `a` without raising any errors
 ```
 
