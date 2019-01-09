@@ -19,7 +19,7 @@ Some settings are located in file `/ini-cfg.h`. There defined some macroses and 
 |`INI_COMMENT`|macro/char|Defines symbol wich marks all following text on this line as comment|`('#')`|
 |`INI_SCREEN`|macro/char|Defines symbol wich used as screen character. Symbol after screen will be copied to key or value without parsing. With that symbol you can insert symbols as `=#\` in keys and values|`('\\')`|
 |`INI_ERRORS`|enum|Defines error codes. You can use it to compare with error code, received from `ini.open`, insted of compairing reason string. Do not change names: will cause compilation errors.|
-|`ini_errors_text`|array of C-strings|Defines error messages(used as reason). Corresponds with `INI_ERRORS`|
+|`ini_errors_text`|array of C-strings|Defines error messages(used as reason). Corresponds with `INI_ERRORS`. Moved to file `ini.c` line 19|
 
 ## Important
 Remove macro `DEBUG` to hide debug output.
@@ -64,6 +64,8 @@ a\#2=b\#1   # Here key is `a#2` and value is `b#1`
 
 [a]         # Appending section `a`
 a=22        # Parser will set new value for `a` without raising any errors
+
+[__path]    # This name is not allowed and parser returns nil insted of table. Reason and error number also returned as 2nd and 3rd variables
 ```
 
 # Other files
@@ -74,7 +76,6 @@ a=22        # Parser will set new value for `a` without raising any errors
 # Bugs
 - 'Mistery' empty strings in output files(at least, everything is working)
 - Fields saved in random order
-- Section `__path`(Not alowed) raises Lua-error. Be careful
 
 <hr>
 Sory for lots of small and almost useles commits and my English

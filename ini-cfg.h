@@ -10,11 +10,5 @@
 #define INI_COMMENT ('#')
 #define INI_SCREEN ('\\')
 
-enum INI_ERRORS { OK=0, INI_NO_SECTION, INI_UNEXP_EOF, INI_STR_TOO_BIG, INI_COMM_AFTER_KEY };
-const char *ini_errors_text[] = {
-    NULL,
-    "No section defined",
-    "Unexpected EOF",
-    "String too big",
-    "Comment after key is not allowed"
-};
+enum INI_ERRORS { OK=0, INI_NO_SECTION, INI_UNEXP_EOF, INI_STR_TOO_BIG, INI_COMM_AFTER_KEY, INI_UNALLOW_NAME };
+extern const char *ini_errors_text[];

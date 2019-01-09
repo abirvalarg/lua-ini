@@ -16,6 +16,15 @@ LUA_FUNC(all_save);
 
 LUA_FUNC(meta_index);
 
+const char *ini_errors_text[] = {
+    NULL,
+    "No section defined",
+    "Unexpected EOF",
+    "String too big",
+    "Comment after key is not allowed",
+    "Unallowed section's name"
+};
+
 static const luaL_Reg _meta[] = {
     {"save", all_save},
     {NULL, NULL}
@@ -337,6 +346,12 @@ LUA_FUNC(static_open)   /* ini_table ini.open(file|path)    */
                     if(i > 127)
                     {
                         error_n = INI_STR_TOO_BIG;
+                        break;
+                    }
+
+                    if(!strcmp(buff, "__path"))
+                    {
+                        error_n = INI_UNALLOW_NAME;
                         break;
                     }
 
