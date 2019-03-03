@@ -65,11 +65,12 @@ a\#2=b\#1   # Here key is `a#2` and value is `b#1`
 [a]         # Appending section `a`
 a=22        # Parser will set new value for `a` without raising any errors
 
-[__path]    # This name is not allowed and parser returns nil insted of table. Reason and error number also returned as 2nd and 3rd variables
+[__path]    # This name is not allowed and parser returns nil insted of table.
+            #Reason and error number also returned as 2nd and 3rd variables
 ```
 
 # Other files
-- `lua/` - Lua headersand binaries for building library
+- `lua/` - Lua headers and binaries for building library
 - `a.ini` - example ini file
 - `main.lua` - test script
 
