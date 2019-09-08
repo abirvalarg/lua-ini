@@ -4,7 +4,7 @@ Ini parserfor Lua
 # Build
 Use `makefile` to build lib for Windows.
 Makefile for Linux will be later.
-For mac... May be later.
+For mac... Do it your self if you need it.
 
 ## Configs
 Some settings are located in file `/ini-cfg.h`. There defined some macroses and array of strings.
@@ -42,7 +42,7 @@ a:save()        -- Save object to file (path stored in field '__path')
 ini.save(a)     -- same
 a:save("b.ini") -- Save object to file 'b.ini' and change field '__path'
 
-a = b = nil -- No special destructor needed
+a, b = nil, nil -- No special destructor needed
 ```
 
 Sections are stored directly in table with keys equals to section's name, so you can't use section \[__path\].
@@ -79,4 +79,4 @@ a=22        # Parser will set new value for `a` without raising any errors
 - Fields saved in random order
 
 <hr>
-Sory for lots of small and almost useles commits and my English
+Sorry for lots of small and almost useles commits and my English
